@@ -30,16 +30,32 @@ export default function LoginPicker({ users }: { users: User[] }) {
           key={u.id}
           onClick={() => login(u.id)}
           disabled={busy !== null}
-          className="flex w-full items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-3 text-left shadow-sm transition hover:border-blue-400 disabled:opacity-60"
+          className="group flex w-full items-center gap-3 rounded-xl border border-stone-200 bg-white px-4 py-3 text-left transition hover:-translate-y-0.5 hover:border-teal-500 hover:shadow-md disabled:translate-y-0 disabled:opacity-60"
         >
-          <span>
-            <span className="block font-medium">{u.name}</span>
-            <span className="block text-sm text-slate-500">{u.email}</span>
+          <span
+            aria-hidden="true"
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-teal-50 font-semibold text-teal-800"
+          >
+            {u.name
+              .split(" ")
+              .map((part) => part[0])
+              .slice(0, 2)
+              .join("")}
           </span>
-          <span className="text-sm text-blue-600">{busy === u.id ? "Signing in…" : "Sign in →"}</span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-medium">{u.name}</span>
+            <span className="block truncate text-sm text-stone-500">{u.email}</span>
+          </span>
+          <span className="text-sm font-medium text-teal-700">
+            {busy === u.id ? "Opening…" : "Explore →"}
+          </span>
         </button>
       ))}
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && (
+        <p role="alert" className="text-sm text-red-700">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 # Submission
 
 **Candidate:** Leonardo Trejos Buenaventura
-**Live URL:** `<PASTE VERCEL URL>`
+**Live URL:** https://ajaia-exam.vercel.app
 **Walkthrough video:** see `VIDEO_URL.txt`
 
 ## Included

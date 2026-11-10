@@ -1,8 +1,6 @@
 # Ajaia Docs
 
-A small collaborative document editor: create and edit rich-text documents, import files, and share documents with other users as viewers or editors.
-
-**Live demo:** `<PASTE VERCEL URL>`
+A focused collaborative editor for writing, importing, and sharing documents. The demo uses three local profiles so the complete sharing flow can be tested without setting up an authentication provider.
 
 ## Demo accounts
 
@@ -14,7 +12,7 @@ No passwords. Pick an account on the sign-in screen.
 | Bob Chen | bob@ajaia.test | Owns **Team Meeting Notes** (shared with Alice as *viewer*) |
 | Carol Diaz | carol@ajaia.test | Nothing shared, good for testing a fresh share |
 
-**Quick sharing test:** sign in as Alice, open a document, click **Share**, add `carol@ajaia.test` as *Can view*. Click **Switch user**, sign in as Carol: the document appears under *Shared with me* and opens read-only.
+**Quick sharing test:** explore as Alice, open a document, click **Share**, and give `carol@ajaia.test` view-only access. Switch to Carol's profile; the document will appear under *Shared with me* and open in read-only mode.
 
 ## Features
 

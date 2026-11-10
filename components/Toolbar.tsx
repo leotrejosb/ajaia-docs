@@ -7,12 +7,14 @@ function Btn({
   active,
   label,
   title,
+  disabled = false,
   className = "",
 }: {
   onClick: () => void;
   active?: boolean;
   label: React.ReactNode;
   title: string;
+  disabled?: boolean;
   className?: string;
 }) {
   return (
@@ -21,16 +23,17 @@ function Btn({
       title={title}
       aria-label={title}
       aria-pressed={active}
+      disabled={disabled}
       onMouseDown={(e) => e.preventDefault()} // keep editor selection
       onClick={onClick}
-      className={`h-8 min-w-8 rounded px-2 text-sm hover:bg-slate-200 ${active ? "bg-slate-200 text-blue-700" : ""} ${className}`}
+      className={`h-8 min-w-8 rounded px-2 text-sm hover:bg-stone-200 disabled:cursor-not-allowed disabled:opacity-35 ${active ? "bg-teal-100 text-teal-800" : ""} ${className}`}
     >
       {label}
     </button>
   );
 }
 
-const Sep = () => <span className="mx-1 h-5 w-px bg-slate-300" />;
+const Sep = () => <span aria-hidden="true" className="mx-1 h-5 w-px bg-stone-300" />;
 
 export default function Toolbar({ editor }: { editor: Editor }) {
   // Re-render only when the active formatting changes.
@@ -52,7 +55,11 @@ export default function Toolbar({ editor }: { editor: Editor }) {
   const chain = () => editor.chain().focus();
 
   return (
-    <div className="sticky top-0 z-10 flex flex-wrap items-center gap-0.5 border-b border-slate-200 bg-white px-2 py-1">
+    <div
+      role="toolbar"
+      aria-label="Document formatting"
+      className="sticky top-0 z-10 flex flex-wrap items-center gap-0.5 border-b border-stone-200 bg-stone-50/95 px-2 py-1.5"
+    >
       <Btn title="Bold (Ctrl+B)" label={<b>B</b>} active={s.bold} onClick={() => chain().toggleBold().run()} />
       <Btn title="Italic (Ctrl+I)" label={<i>I</i>} active={s.italic} onClick={() => chain().toggleItalic().run()} />
       <Btn
@@ -75,8 +82,8 @@ export default function Toolbar({ editor }: { editor: Editor }) {
         onClick={() => chain().toggleOrderedList().run()}
       />
       <Sep />
-      <Btn title="Undo (Ctrl+Z)" label="↶" onClick={() => chain().undo().run()} className={s.canUndo ? "" : "opacity-40"} />
-      <Btn title="Redo (Ctrl+Shift+Z)" label="↷" onClick={() => chain().redo().run()} className={s.canRedo ? "" : "opacity-40"} />
+      <Btn title="Undo (Ctrl+Z)" label="↶" disabled={!s.canUndo} onClick={() => chain().undo().run()} />
+      <Btn title="Redo (Ctrl+Shift+Z)" label="↷" disabled={!s.canRedo} onClick={() => chain().redo().run()} />
     </div>
   );
 }

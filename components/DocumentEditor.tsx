@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { Placeholder } from "@tiptap/extensions";
+import Placeholder from "@tiptap/extension-placeholder";
 import type { Doc, Share, User } from "@/lib/repo";
 import { can } from "@/lib/access";
 import { api } from "./api";
@@ -64,9 +64,9 @@ export default function DocumentEditor({
     content: doc.content,
     extensions: [
       StarterKit.configure({ heading: { levels: [1, 2, 3] }, link: { openOnClick: !editable } }),
-      Placeholder.configure({ placeholder: "Start writing…" }),
+      Placeholder.configure({ placeholder: "Start with an idea, a rough note, or a question…" }),
     ],
-    editorProps: { attributes: { class: "doc-content", "aria-label": "Document content" } },
+    editorProps: { attributes: { class: "doc-content", "aria-label": "Document content", spellcheck: "true" } },
     onUpdate: ({ editor: e }) => {
       setState("dirty");
       if (timer.current) clearTimeout(timer.current);
@@ -104,18 +104,22 @@ export default function DocumentEditor({
   }
 
   const status = {
-    saved: "All changes saved",
-    dirty: "Unsaved changes…",
+    saved: "Saved",
+    dirty: "Waiting to save…",
     saving: "Saving…",
-    error: "Save failed",
+    error: "Couldn’t save",
   }[state];
 
   return (
     <div className="min-h-screen">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-4xl flex-wrap items-center gap-3 px-4 py-3">
-          <Link href="/documents" className="text-sm text-slate-500 hover:text-slate-900" aria-label="Back">
-            ← Docs
+      <header className="border-b border-stone-200/80 bg-white/90 backdrop-blur">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-3 px-5 py-3">
+          <Link
+            href="/documents"
+            className="rounded text-sm font-medium text-stone-500 hover:text-stone-950"
+            aria-label="Back to documents"
+          >
+            ← Documents
           </Link>
           <input
             value={title}
@@ -125,10 +129,10 @@ export default function DocumentEditor({
             readOnly={!editable}
             maxLength={200}
             aria-label="Document title"
-            className="min-w-0 flex-1 rounded px-2 py-1 text-lg font-semibold outline-none read-only:cursor-default focus:bg-slate-100"
+            className="min-w-[12rem] flex-1 rounded-lg px-2 py-1 text-lg font-semibold outline-none read-only:cursor-default focus:bg-amber-50"
           />
           <span
-            className={`text-sm ${state === "error" ? "text-red-600" : "text-slate-500"}`}
+            className={`text-sm ${state === "error" ? "text-red-700" : "text-stone-500"}`}
             aria-live="polite"
           >
             {editable ? status : "View only"}
@@ -136,7 +140,7 @@ export default function DocumentEditor({
           {can.share(doc.role) && (
             <button
               onClick={() => setShareOpen(true)}
-              className="rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+              className="rounded-lg bg-teal-700 px-3 py-1.5 text-sm font-medium text-white hover:bg-teal-800"
             >
               Share{shares.length ? ` (${shares.length})` : ""}
             </button>
@@ -145,11 +149,11 @@ export default function DocumentEditor({
         </div>
       </header>
 
-      <main className="mx-auto max-w-4xl px-4 py-6">
+      <main className="mx-auto max-w-5xl px-5 py-7">
         {doc.role !== "owner" && (
-          <p className="mb-3 rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-900">
-            Shared with you by <strong>{doc.ownerName}</strong> ·{" "}
-            {editable ? "you can edit" : "you have view-only access"}
+          <p className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm text-amber-950">
+            <strong>{doc.ownerName}</strong> shared this with you.{" "}
+            {editable ? "You can make changes." : "You can read it, but only the owner and editors can make changes."}
           </p>
         )}
         {error && (
@@ -157,7 +161,7 @@ export default function DocumentEditor({
             {error}
           </p>
         )}
-        <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+        <div className="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-lg shadow-stone-900/5">
           {editor && editable && <Toolbar editor={editor} />}
           <div className="px-8 py-6 sm:px-12">
             <EditorContent editor={editor} />

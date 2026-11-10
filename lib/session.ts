@@ -11,7 +11,12 @@ import { unauthorized } from "./errors";
 const COOKIE = "session";
 
 function secret() {
-  return process.env.SESSION_SECRET || "dev-only-insecure-secret";
+  const value = process.env.SESSION_SECRET;
+  if (value) return value;
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("SESSION_SECRET is required in production");
+  }
+  return "dev-only-insecure-secret";
 }
 
 export function sign(userId: string) {

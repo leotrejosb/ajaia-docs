@@ -30,6 +30,9 @@ async function createDb(): Promise<Db> {
       },
     };
   } else {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("DATABASE_URL is required in production");
+    }
     const fs = await import("node:fs");
     const dir = process.env.PGLITE_DIR ?? "./.data/pglite";
     fs.mkdirSync(dir, { recursive: true });

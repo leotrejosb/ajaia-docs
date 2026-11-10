@@ -155,7 +155,7 @@ export async function deleteDocument(db: Db, id: string, userId: string) {
 }
 
 export async function listShares(db: Db, id: string, userId: string): Promise<Share[]> {
-  await requireRole(db, id, userId, can.view);
+  await requireRole(db, id, userId, can.share);
   return db.query<Share>(
     `SELECT u.id AS "userId", u.email, u.name, s.role
        FROM document_shares s JOIN users u ON u.id = s.user_id

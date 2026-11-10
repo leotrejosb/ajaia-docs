@@ -12,7 +12,7 @@ export const GET = handle(async () => {
 
 export const POST = handle(async (req: Request) => {
   const user = await requireUser();
-  const body = await req.json().catch(() => ({}));
+  const body = await req.json();
   const { title } = createDocSchema.parse(body);
   const id = await createDocument(await getDb(), user.id, title ?? "Untitled document");
   return NextResponse.json({ id }, { status: 201 });

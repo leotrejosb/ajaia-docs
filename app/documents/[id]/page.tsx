@@ -12,6 +12,6 @@ export default async function DocumentPage({ params }: { params: Promise<{ id: s
   const db = await getDb();
   const doc = await getDocumentForUser(db, (await params).id, user.id);
   if (!doc) notFound();
-  const shares = await listShares(db, doc.id, user.id);
+  const shares = doc.role === "owner" ? await listShares(db, doc.id, user.id) : [];
   return <DocumentEditor user={user} doc={doc} initialShares={shares} />;
 }
